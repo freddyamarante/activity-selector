@@ -12,6 +12,8 @@ export default function ActivitiesForm({ submitButton }: ActivitiesFormProps) {
     description: '',
   })
 
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
     setFormData((prevFormData) => ({ ...prevFormData, [name]: value }))
@@ -19,8 +21,14 @@ export default function ActivitiesForm({ submitButton }: ActivitiesFormProps) {
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault()
-    submitButton(formData)
-    setFormData({ title: '', description: '' })
+
+    if (formData.title !== '') {
+      submitButton(formData)
+      setFormData({ title: '', description: '' })
+      setErrorMessage(null)
+    } else {
+      setErrorMessage('Please add a title')
+    }
   }
 
   return (
@@ -57,6 +65,10 @@ export default function ActivitiesForm({ submitButton }: ActivitiesFormProps) {
           className="bg-slate-600 border-2 border-slate-950 pl-2 py-1 rounded-lg"
         />
       </div>
+
+      {errorMessage && (
+        <div className="font-light text-red-500">{errorMessage}</div>
+      )}
 
       <button type="submit" className="bg-slate-950 p-2 rounded-lg hover:">
         Add Activity
