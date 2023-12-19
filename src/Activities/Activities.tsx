@@ -25,9 +25,13 @@ export default function Activities() {
     setActivities((current) => [...current, newActivity])
   }
 
+  const deleteActivity = (index: number) => {
+    setActivities((current) => current.filter((_, i) => i !== index))
+  }
+
   return (
     <div className="flex flex-row max-w-3xl mx-auto px-12 justify-between">
-      <ActivitiesList activities={activities} />
+      <ActivitiesList activities={activities} onDelete={deleteActivity} />
 
       <ActivitiesForm submitButton={addActivity} />
     </div>
