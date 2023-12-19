@@ -1,14 +1,44 @@
-export default function ActivitiesForm() {
+import { ActivityType } from '../types/ActivityType'
+
+import { ChangeEvent, FormEvent, useState } from 'react'
+
+type ActivitiesFormProps = {
+  submitButton: (newActivity: ActivityType) => void
+}
+
+export default function ActivitiesForm({ submitButton }: ActivitiesFormProps) {
+  const [formData, setFormData] = useState<ActivityType>({
+    title: '',
+    description: '',
+  })
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target
+    setFormData((prevFormData) => ({ ...prevFormData, [name]: value }))
+  }
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault()
+    submitButton(formData)
+    setFormData({ title: '', description: '' })
+  }
+
   return (
-    <form className="flex flex-col space-y-6">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col flex-grow-0 space-y-6"
+    >
       <div className="flex flex-col">
         <label className="font-semibold text-xl mb-1" htmlFor="title">
           Title
         </label>
         <input
+          id="title"
           name="title"
           type="text"
           placeholder="Title"
+          value={formData.title}
+          onChange={handleChange}
           className="bg-slate-600 border-2 border-slate-950 pl-2 py-1 rounded-lg"
         />
       </div>
@@ -18,14 +48,17 @@ export default function ActivitiesForm() {
           Description
         </label>
         <input
+          id="description"
           name="description"
           type="text"
           placeholder="Description"
+          value={formData.description}
+          onChange={handleChange}
           className="bg-slate-600 border-2 border-slate-950 pl-2 py-1 rounded-lg"
         />
       </div>
 
-      <button className="bg-slate-950 p-2 rounded-lg hover:" type="button">
+      <button type="submit" className="bg-slate-950 p-2 rounded-lg hover:">
         Add Activity
       </button>
     </form>
